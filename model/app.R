@@ -6,13 +6,22 @@ fatality_rate = .0087
 days_from_infection_to_death = 17.3
 doubling_time = 4
 
+# functions
+
+source("model_functions.R")
+
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(# Application title
-  titlePanel("Old Faithful Geyser Data"),
+  titlePanel("Covid19 Simple model"),
   
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
+      p('Do you want to use the modelling based on number of deaths or number of cases?'),
+      radioButtons("model_choice", "Model to choose:", choices = c("#deaths", "#cases"), selected = "#deaths",
+                   inline = FALSE, width = NULL, choiceNames = NULL,
+                   choiceValues = NULL),
       numericInput("employees",
                    "How many employees do you have?",
                    250,
@@ -48,6 +57,7 @@ ui <- fluidPage(# Application title
       p("Days from infection to death = 17.3 "),
       p("Doubling time = 4 "),
       textOutput("estimated_cases"),
+      p("likelyhood_no_infection indicates the likelyhood that none of the employees has the disease"),
       tableOutput("probabilities")
     )
   ))
@@ -62,37 +72,26 @@ server <- function(input, output) {
     number_of_times_cases_have_doubled <-
       days_from_infection_to_death / doubling_time
     
-    estimated_true_cases_today = estimated_cases_that_caused_deaths * (2 ** number_of_times_cases_have_doubled)
+    cases_today = estimated_cases_that_caused_deaths * (2 ** number_of_times_cases_have_doubled)
     
     result <-
       paste("The number of estimated cases today is",
-            estimated_true_cases_today)
+            cases_today)
     
     return(result)
   })
   
   output$probabilities <- renderTable({
     
+    model_to_use = input$model_choice
     deaths = input$deaths
     population = input$population
-    
-    estimated_cases_that_caused_deaths <- deaths / fatality_rate
-    
-    number_of_times_cases_have_doubled <-
-      days_from_infection_to_death / doubling_time
-    
-    cases_today = estimated_cases_that_caused_deaths * (2 ** number_of_times_cases_have_doubled)
-    
-    cases_tomorrow = cases_today * (2 ** (1/doubling_time)  )
-    cases_in_a_week = cases_today * (2 ** (7/doubling_time)  )
+    employees = input$employees
     
     
-    estimated_cases = c( cases_today, cases_tomorrow, cases_in_a_week)
-    infection_rates = estimated_cases /  population
+    output_dataframe <- calculate_death_model(deaths, population, employees, fatality_rate = .0087,  doubling_time = 4, days_from_infection_to_death = 17.3)
 
-    # Obs: number of cases can currently be bigger than population!
-    
-    return(data.frame(date = c("today", "tomorrow", "in a week"),estimated_n_cases = estimated_cases , infection_rate = infection_rates ))
+  return(output_dataframe)   
   }, digits = 4)
 }
 

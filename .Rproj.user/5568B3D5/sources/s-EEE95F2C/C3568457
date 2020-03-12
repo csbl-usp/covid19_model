@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "C3568457",
-    "lastKnownWriteTime" : 1584041819,
-    "last_content_update" : 1584041819273,
+    "lastKnownWriteTime" : 1584051749,
+    "last_content_update" : 1584051749329,
     "path" : "~/Documents/Projects/side/covid19/model/app.R",
     "project_path" : "model/app.R",
     "properties" : {
-        "cursorPosition" : "92,67",
-        "scrollLine" : "68"
+        "cursorPosition" : "91,77",
+        "scrollLine" : "72"
     },
     "relative_order" : 1,
     "source_on_save" : false,

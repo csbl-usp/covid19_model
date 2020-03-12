@@ -71,3 +71,16 @@ Total 22 (delta 0), reused 0 (delta 0)
 To github.com:csbl-usp/covid19_model.git
    794a9b7..79067cd  master -> master
 ]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ git add; [K[K .
+]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ git commit -m "fixing code and making mini[K[K[Kvp [K app"
+[master 328b00b] fixing code and making mvp app
+ 5 files changed, 47 insertions(+), 21 deletions(-)
+]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ git push
+Counting objects: 13, done.
+Delta compression using up to 8 threads.
+Compressing objects:   8% (1/12)   Compressing objects:  16% (2/12)   Compressing objects:  25% (3/12)   Compressing objects:  33% (4/12)   Compressing objects:  41% (5/12)   Compressing objects:  50% (6/12)   Compressing objects:  58% (7/12)   Compressing objects:  66% (8/12)   Compressing objects:  75% (9/12)   Compressing objects:  83% (10/12)   Compressing objects:  91% (11/12)   Compressing objects: 100% (12/12)   Compressing objects: 100% (12/12), done.
+Writing objects:   7% (1/13)   Writing objects:  15% (2/13)   Writing objects:  23% (3/13)   Writing objects:  30% (4/13)   Writing objects:  38% (5/13)   Writing objects:  46% (6/13)   Writing objects:  53% (7/13)   Writing objects:  61% (8/13)   Writing objects:  69% (9/13)   Writing objects:  76% (10/13)   Writing objects:  84% (11/13)   Writing objects:  92% (12/13)   Writing objects: 100% (13/13)   Writing objects: 100% (13/13), 1.98 KiB | 1.98 MiB/s, done.
+Total 13 (delta 4), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/4)[Kremote: Resolving deltas:  25% (1/4)[Kremote: Resolving deltas:  50% (2/4)[Kremote: Resolving deltas:  75% (3/4)[Kremote: Resolving deltas: 100% (4/4)[Kremote: Resolving deltas: 100% (4/4), completed with 4 local objects.[K
+To github.com:csbl-usp/covid19_model.git
+   79067cd..328b00b  master -> master
+]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ git add .
