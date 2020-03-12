@@ -45,3 +45,29 @@ Command 'Git' not found, did you mean:
 Try: sudo apt install <deb name>
 
 ]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ Git add .[1P[1@g
+]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ git add [K[K[K[Kcommit -m "Adding initial shiny app and the reference xl[K[Kexcel"
+[master 79067cd] Adding initial shiny app and the reference excel
+ 14 files changed, 418 insertions(+)
+ create mode 100644 .Rhistory
+ create mode 100644 .Rproj.user/5568B3D5/console06/7F4AD2F3
+ create mode 100644 .Rproj.user/5568B3D5/console06/7F4AD2F3.env
+ create mode 100644 .Rproj.user/5568B3D5/console06/INDEX001
+ create mode 100644 .Rproj.user/5568B3D5/sources/prop/7046722B
+ create mode 100644 .Rproj.user/5568B3D5/sources/prop/INDEX
+ create mode 100644 .Rproj.user/5568B3D5/sources/s-EEE95F2C/C3568457
+ create mode 100644 .Rproj.user/5568B3D5/sources/s-EEE95F2C/C3568457-contents
+ create mode 100644 .Rproj.user/5568B3D5/sources/s-EEE95F2C/lock_file
+ create mode 100644 .Rproj.user/shared/notebooks/patch-chunk-names
+ create mode 100644 .~lock.Coronavirus_model.xlsx#
+ create mode 100644 Coronavirus_model.xlsx
+ create mode 100644 covid19.Rproj
+ create mode 100644 model/app.R
+]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ git push
+Counting objects: 22, done.
+Delta compression using up to 8 threads.
+Compressing objects:   5% (1/18)   Compressing objects:  11% (2/18)   Compressing objects:  16% (3/18)   Compressing objects:  22% (4/18)   Compressing objects:  27% (5/18)   Compressing objects:  33% (6/18)   Compressing objects:  38% (7/18)   Compressing objects:  44% (8/18)   Compressing objects:  50% (9/18)   Compressing objects:  55% (10/18)   Compressing objects:  61% (11/18)   Compressing objects:  66% (12/18)   Compressing objects:  72% (13/18)   Compressing objects:  77% (14/18)   Compressing objects:  83% (15/18)   Compressing objects:  88% (16/18)   Compressing objects:  94% (17/18)   Compressing objects: 100% (18/18)   Compressing objects: 100% (18/18), done.
+Writing objects:   4% (1/22)   Writing objects:   9% (2/22)   Writing objects:  13% (3/22)   Writing objects:  18% (4/22)   Writing objects:  22% (5/22)   Writing objects:  27% (6/22)   Writing objects:  31% (7/22)   Writing objects:  36% (8/22)   Writing objects:  40% (9/22)   Writing objects:  45% (10/22)   Writing objects:  50% (11/22)   Writing objects:  54% (12/22)   Writing objects:  59% (13/22)   Writing objects:  63% (14/22)   Writing objects:  68% (15/22)   Writing objects:  72% (16/22)   Writing objects:  77% (17/22)   Writing objects:  81% (18/22)   Writing objects:  86% (19/22)   Writing objects:  90% (20/22)   Writing objects:  95% (21/22)   Writing objects: 100% (22/22)   Writing objects: 100% (22/22), 91.93 KiB | 22.98 MiB/s, done.
+Total 22 (delta 0), reused 0 (delta 0)
+To github.com:csbl-usp/covid19_model.git
+   794a9b7..79067cd  master -> master
+]0;lubianat@csbl-tiago:~/Documents/Projects/side/covid19]7;file://csbl-tiago/home/lubianat/Documents/Projects/side/covid19(base) ]0;lubianat@csbl-tiago: ~/Documents/Projects/side/covid19[01;32mlubianat@csbl-tiago[00m:[01;34m~/Documents/Projects/side/covid19[00m$ git add; [K[K .

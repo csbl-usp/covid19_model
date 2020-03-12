@@ -81,18 +81,18 @@ server <- function(input, output) {
     number_of_times_cases_have_doubled <-
       days_from_infection_to_death / doubling_time
     
-    estimated_true_cases_today = estimated_cases_that_caused_deaths * (2 ** number_of_times_cases_have_doubled)
+    cases_today = estimated_cases_that_caused_deaths * (2 ** number_of_times_cases_have_doubled)
     
-    estimated_true_cases_tomorrow
-    estimated_true_cases_in_a_week = 
-    
-    
-    
-    current_infection_rate = estimated_true_cases_today / population
-    print(current_infection_rate)
+    cases_tomorrow = cases_today * (2 ** (1/doubling_time)  )
+    cases_in_a_week = cases_today * (2 ** (7/doubling_time)  )
     
     
-    return(data.frame(date = ("today", "tomorrow", "in a week"), infection_rate))
+    estimated_cases = c( cases_today, cases_tomorrow, cases_in_a_week)
+    infection_rates = estimated_cases /  population
+
+    # Obs: number of cases can currently be bigger than population!
+    
+    return(data.frame(date = c("today", "tomorrow", "in a week"),estimated_n_cases = estimated_cases , infection_rate = infection_rates ))
   }, digits = 4)
 }
 
