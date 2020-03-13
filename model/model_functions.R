@@ -83,16 +83,9 @@ calculate_cases_model <-
     cases_today = cases / share_of_foreign_spread
     
     
-    
-    
-    # The sum of the days in the model with less than we have today.
+      # The sum of the days in the model with less than we have today.
     estimated_day_of_epidemy = sum(average_case_progression < cases_today)
-    
-    average_case_progression
-    
-    
-    
-    
+
     cases_today = cases_today
     
     cases_tomorrow = average_case_progression[estimated_day_of_epidemy + 1]
@@ -111,8 +104,6 @@ calculate_cases_model <-
       estimated_n_cases = estimated_cases ,
       likelyhood_no_infection = likelihoods
     )
-    
-    return(output_dataframe)
     
     if (output_format == "dataframe") {
       return(output_dataframe)
