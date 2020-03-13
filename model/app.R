@@ -17,7 +17,7 @@ average_case_progression = c(12, 26, 43, 64, 103, 148, 215, 310, 383, 475, 624, 
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(# Application title
-  titlePanel("Covid19 Simple model"),
+  titlePanel("Coronavirus: Why You Must Act Now"),
   
   # Sidebar with a slider input for number of bins
   sidebarLayout(
@@ -27,7 +27,7 @@ ui <- fluidPage(# Application title
                    inline = FALSE, width = NULL, choiceNames = NULL,
                    choiceValues = NULL),
       numericInput("employees",
-                   "How many employees do you have?",
+                   "How many employees/students do you have?",
                    250,
                    min = 1),
       numericInput(
@@ -38,7 +38,7 @@ ui <- fluidPage(# Application title
         max = 100
       ),
       p(
-        '"I am ok with this probability that one or more of my employees has the coronavirus."'
+        '"I am ok with this probability that one or more of my employees/students has the coronavirus."'
       ),
       
       numericInput(
@@ -46,36 +46,55 @@ ui <- fluidPage(# Application title
         "# people in your area",
         3096633
       ),
-      
-      h4("Model #deaths"),
-      numericInput(
-        "deaths",
-        "Total deaths as of today",
-        1,
-        min = 0,
-        max = 100
+      conditionalPanel(
+        condition = "input.model_choice == '#deaths'",
+        
+        h4("Model #deaths"),
+        numericInput(
+          "deaths",
+          "Total deaths as of today",
+          1,
+          min = 0,
+          max = 100
+        )
       ),
+      conditionalPanel(
+        condition = "input.model_choice == '#cases'",
       h4("Model #cases"),
       numericInput(
         "cases",
         "Total known cases in your area as of today",
         30,
         min = 0)
+      )
 
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
-      p("Parameters used : "),
-      p("Fatality rate = 0.87% "),
-      p("Days from infection to death = 17.3 "),
-      p("Doubling time = 4 "),
+
       h3(textOutput("model_used")),
+      conditionalPanel(
+        condition = "input.model_choice == '#cases'",
+        p("Parameters used : "),
+        p("Fatality rate = 0.87% "),
+        p("Days from infection to death = 17.3 "),
+        p("Doubling time = 4 ")
+      ),
+      conditionalPanel(
+        condition = "input.model_choice == '#deaths'",
+        p("Model was based on average progression of case numbers in affected countries. ")
+      ),
       textOutput("estimated_cases"),
       br(),
-      p("\n likelyhood_no_infection indicates the likelyhood that none of the employees has the disease"),
       tableOutput("probabilities"),
-      dataTableOutput("recommendation")
+      dataTableOutput("recommendation"),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      p("* Adapted from medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca")
     )
   ))
 
