@@ -29,7 +29,7 @@ calculate_death_model <-
     cases_in_a_week = cases_today * (2 ** (7 / doubling_time))
     
     
-    estimated_cases = c(cases_today, cases_tomorrow, cases_in_a_week)
+    estimated_cases = round(c(cases_today, cases_tomorrow, cases_in_a_week))
     infection_rates = estimated_cases /  population
     
     # Obs: number of cases output by the model can currently be bigger than population!
@@ -93,7 +93,7 @@ calculate_cases_model <-
     cases_in_a_week = average_case_progression[estimated_day_of_epidemy + 7]
     
     
-    estimated_cases = c(cases_today, cases_tomorrow, cases_in_a_week)
+    estimated_cases = round(c(cases_today, cases_tomorrow, cases_in_a_week))
     infection_rates = estimated_cases /  population
     
     # Obs: number of cases output by the model can currently be bigger than population!

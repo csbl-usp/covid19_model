@@ -48,16 +48,23 @@ average_case_progression = c(
   35399
 )
 
+
+#We can choose from severak shiny themes in the link below
+#https://shiny.rstudio.com/gallery/shiny-theme-selector.html
+ourtheme <- "cerulean"
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   # Application title
-  titlePanel("Coronavirus: Why You Must Act Now"),
-  
+  titlePanel(h1("Coronavirus: Why You Must Act Now")),
+  theme = shinythemes::shinytheme(ourtheme),
+  br(),
+  br(),
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
       p(
-        'Do you want to use the modelling based on number of deaths or number of cases?'
+        h4('Do you want to use the modelling based on number of deaths or number of cases?')
       ),
       radioButtons(
         "model_choice",
@@ -70,12 +77,12 @@ ui <- fluidPage(
         choiceValues = NULL
       ),
       numericInput("employees",
-                   "How many employees/students do you have?",
+                   h4("How many employees/students do you have?"),
                    250,
                    min = 1),
       numericInput(
         "risk",
-        "What risk are you willing to take (in percentage)?",
+        h4("What risk are you willing to take (in percentage)?"),
         1,
         min = 0,
         max = 100
@@ -85,15 +92,14 @@ ui <- fluidPage(
       ),
       
       numericInput("population",
-                   "# people in your area",
+                   h4("How many people have in your area"),
                    3096633),
       conditionalPanel(
         condition = "input.model_choice == '#deaths'",
         
-        h4("Model #deaths"),
         numericInput(
           "deaths",
-          "Total deaths as of today",
+          h4("Total deaths as of today"),
           1,
           min = 0,
           max = 100
@@ -103,7 +109,7 @@ ui <- fluidPage(
         condition = "input.model_choice == '#cases'",
         h4("Model #cases"),
         numericInput("cases",
-                     "Total known cases in your area as of today",
+                     h4("Total known cases in your area as of today"),
                      30,
                      min = 0)
       )
@@ -112,7 +118,7 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      h3(textOutput("model_used")),
+      #h3(textOutput("model_used")),
       conditionalPanel(
         condition = "input.model_choice == '#deaths'",
         p("Parameters used : "),
@@ -123,22 +129,20 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.model_choice == '#cases'",
         p(
-          "Model was based on average progression of case numbers in affected countries. "
+          h4("Model was based on average progression of case numbers in affected countries. ")
         )
       ),
       textOutput("estimated_cases"),
       br(),
       tableOutput("probabilities"),
-      plotOutput("cases_barplot", width = "50%"),
+      plotOutput("cases_barplot", width = "90%"),
       dataTableOutput("recommendation", width = "60%"),
-      br(),
-      br(),
-      br(),
       br(),
       br(),
       p(
         "* Adapted from medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca"
-      )
+      
+        )
     )
   )
 )
@@ -266,6 +270,7 @@ server <- function(input, output) {
                                                 average_case_progression,
                                                 output_format = "plot")
     }
+    
     return(output_plot)
     
   })
