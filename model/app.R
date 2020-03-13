@@ -11,12 +11,9 @@ doubling_time = 4
 source("model_functions.R")
 require(readxl)
 
-community_external_estimate = read_excel("../clean_models.xlsx", sheet = 1)
-
-average_case_progression = read_excel("../clean_models.xlsx", sheet = 2)
-average_case_progression = as.numeric(average_case_progression[1,])
-average_case_progression = average_case_progression[!is.na(average_case_progression)][-33]
-
+average_case_progression = c(12, 26, 43, 64, 103, 148, 215, 310, 383, 475, 624, 807, 1019, 
+                             1256, 1373, 1508, 2019, 2480, 2998, 3625, 4384, 5300, 6409, 7749, 
+                             9369, 11329, 13698, 16562, 20025, 24213, 29277, 35399)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(# Application title
@@ -106,6 +103,7 @@ server <- function(input, output) {
     
     model_to_use = input$model_choice
     deaths = input$deaths
+    cases = input$cases
     population = input$population
     employees = input$employees
     
@@ -117,7 +115,6 @@ server <- function(input, output) {
       output_dataframe <- calculate_cases_model(cases,
                                                 population,
                                                 employees,
-                                                community_external_estimate,
                                                 average_case_progression)    }
 
   return(output_dataframe)   
@@ -131,6 +128,7 @@ server <- function(input, output) {
     deaths = input$deaths
     population = input$population
     employees = input$employees
+    cases = input$cases
     
     if (model_to_use == "#deaths"){
       output_dataframe <- calculate_death_model(deaths, population, employees, fatality_rate = .0087,  doubling_time = 4, days_from_infection_to_death = 17.3)
@@ -140,7 +138,6 @@ server <- function(input, output) {
       output_dataframe <- calculate_cases_model(cases,
       population,
       employees,
-      community_external_estimate,
       average_case_progression)
     }
     datatable_to_return <- give_recommendation(model_table = output_dataframe, risk_you_want_to_take)
