@@ -1,5 +1,7 @@
 library(shiny)
+library(shiny.i18n)
 
+library(data.table)
 # Parameters :
 
 fatality_rate = .0087
@@ -112,14 +114,14 @@ ui <- fluidPage(
     mainPanel(
       h3(textOutput("model_used")),
       conditionalPanel(
-        condition = "input.model_choice == '#cases'",
+        condition = "input.model_choice == '#deaths'",
         p("Parameters used : "),
         p("Fatality rate = 0.87% "),
         p("Days from infection to death = 17.3 "),
         p("Doubling time = 4 ")
       ),
       conditionalPanel(
-        condition = "input.model_choice == '#deaths'",
+        condition = "input.model_choice == '#cases'",
         p(
           "Model was based on average progression of case numbers in affected countries. "
         )
