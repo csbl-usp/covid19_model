@@ -87,9 +87,18 @@ server <- function(input, output) {
   output$estimated_cases <- renderText({
     
     deaths = input$deaths
+    cases = input$cases
     model_to_use = input$model_choice
     
-    cases_today = estimate_cases_by_deaths(deaths, fatality_rate, doubling_time, days_from_infection_to_death)
+    if (model_to_use == "#deaths"){
+      cases_today = estimate_cases_by_deaths(deaths, fatality_rate, doubling_time, days_from_infection_to_death)
+    }
+    
+    if (model_to_use == "#cases"){
+      share_of_foreign_spread <- get_proportion_of_foreign_cases(cases)
+      cases_today = cases/share_of_foreign_spread
+    }
+    
     
     
     result <-
