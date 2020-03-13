@@ -58,7 +58,7 @@ ui <- fluidPage(# Application title
       h4("Model #cases"),
       numericInput(
         "cases",
-        "Total cases in your area as of today",
+        "Total known cases in your area as of today",
         30,
         min = 0)
 
@@ -102,7 +102,7 @@ server <- function(input, output) {
     
     
     result <-
-      paste("The number of estimated cases today is",
+      paste("The number of estimated true cases today is",
             cases_today)
     
     return(result)
