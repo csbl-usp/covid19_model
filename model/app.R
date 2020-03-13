@@ -97,6 +97,8 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.model_choice == '#deaths'",
         
+        h4("Model #deaths"),
+        
         numericInput(
           "deaths",
           h4("Total deaths as of today"),
