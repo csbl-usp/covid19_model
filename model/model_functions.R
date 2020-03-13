@@ -1,9 +1,10 @@
 library(DT)
-
+library(ggplot2)
 
 #' @param number_of_deaths
 #' @param population
 #' @param employees
+#' @param output_format Either "dataframe" or "plot". Defaults to "dataframe"
 #' @param fatality_rate Defaults to .0087
 #' @param doubling_time Defaults to 4
 #' @param days_from_infection_to_death Defaults to 17.3
@@ -15,7 +16,8 @@ calculate_death_model <-
            employees,
            fatality_rate = .0087,
            doubling_time = 4,
-           days_from_infection_to_death = 17.3) {
+           days_from_infection_to_death = 17.3,
+           output_format = "dataframe") {
     estimated_cases_that_caused_deaths <- deaths / fatality_rate
     
     number_of_times_cases_have_doubled <-
@@ -39,22 +41,43 @@ calculate_death_model <-
       likelyhood_no_infection = likelihoods
     )
     
-    return(output_dataframe)
+    
+    if (output_format == "dataframe") {
+      return(output_dataframe)
+    }
+    
+    if (output_format == "plot") {
+      output_dataframe$date <-
+        factor(output_dataframe$date,
+               levels = c("in a week", "tomorrow", "today"))
+      
+      p <-
+        ggplot(output_dataframe, aes(y = estimated_n_cases, x = date)) +
+        geom_bar(stat = 'identity') +
+        coord_flip() +
+        theme_bw()
+      
+      
+      return(p)
+    }
+    
+    
     
   }
 
 
-#' @param number_of_deaths
+#' @param cases
 #' @param population
 #' @param employees
-#' @param community_external_estimate Estimate of how many cases are local and how many are external.
 #' @param average_case_progression How cases develop through time (on average).
+#' @param output_format Either "dataframe" or "plot". Defaults to "dataframe"
 #' @return aata.frame with model results
 calculate_cases_model <-
   function(cases,
            population,
            employees,
-           average_case_progression) {
+           average_case_progression,
+           output_format = "dataframe") {
     share_of_foreign_spread <- get_proportion_of_foreign_cases(cases)
     
     cases_today = cases / share_of_foreign_spread
@@ -91,6 +114,24 @@ calculate_cases_model <-
     
     return(output_dataframe)
     
+    if (output_format == "dataframe") {
+      return(output_dataframe)
+    }
+    
+    if (output_format == "plot") {
+      output_dataframe$date <-
+        factor(output_dataframe$date,
+               levels = c("in a week", "tomorrow", "today"))
+      
+      p <-
+        ggplot(output_dataframe, aes(y = estimated_n_cases, x = date)) +
+        geom_bar(stat = 'identity') +
+        coord_flip() +
+        theme_bw()
+      
+      
+      return(p)
+    }
   }
 
 #' @return datatable with recommendation
@@ -121,8 +162,8 @@ give_recommendation <-
     rownames(output_df) <- c("What to do:")
     
     output_dt = datatable(output_df, options = list(dom = 't')) %>% formatStyle(1,
-                        color = color,
-                        backgroundColor = backgroundcolor)
+                                                                                color = color,
+                                                                                backgroundColor = backgroundcolor)
     return(output_dt)
   }
 

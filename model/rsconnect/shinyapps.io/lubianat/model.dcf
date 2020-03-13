@@ -5,9 +5,9 @@ account: lubianat
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1946072
-bundleId: 2879242
+bundleId: 2879389
 url: https://lubianat.shinyapps.io/model/
-when: 1584124091.03751
+when: 1584128035.39359
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: clean_models.xlsx
