@@ -9,6 +9,13 @@ doubling_time = 4
 # functions
 
 source("model_functions.R")
+require(readxl)
+
+community_external_estimate = read_excel("../clean_models.xlsx", sheet = 1)
+
+average_case_progression = read_excel("../clean_models.xlsx", sheet = 2)
+average_case_progression = as.numeric(average_case_progression[1,])
+average_case_progression = average_case_progression[!is.na(average_case_progression)][-33]
 
 
 # Define UI for application that draws a histogram
@@ -28,7 +35,7 @@ ui <- fluidPage(# Application title
                    min = 1),
       numericInput(
         "risk",
-        "What risk are you willing to take?",
+        "What risk are you willing to take (in percentage)?",
         1,
         min = 0,
         max = 100
@@ -36,6 +43,14 @@ ui <- fluidPage(# Application title
       p(
         '"I am ok with this probability that one or more of my employees has the coronavirus."'
       ),
+      
+      numericInput(
+        "population",
+        "# people in your area",
+        3096633
+      ),
+      
+      h4("Model #deaths"),
       numericInput(
         "deaths",
         "Total deaths as of today",
@@ -43,11 +58,13 @@ ui <- fluidPage(# Application title
         min = 0,
         max = 100
       ),
+      h4("Model #cases"),
       numericInput(
-        "population",
-        "# people in the area of the deaths",
-        3096633
-      )
+        "cases",
+        "Total cases in your area as of today",
+        30,
+        min = 0)
+
     ),
     
     # Show a plot of the generated distribution
@@ -56,23 +73,27 @@ ui <- fluidPage(# Application title
       p("Fatality rate = 0.87% "),
       p("Days from infection to death = 17.3 "),
       p("Doubling time = 4 "),
+      h3(textOutput("model_used")),
       textOutput("estimated_cases"),
-      p("likelyhood_no_infection indicates the likelyhood that none of the employees has the disease"),
-      tableOutput("probabilities")
+      br(),
+      p("\n likelyhood_no_infection indicates the likelyhood that none of the employees has the disease"),
+      tableOutput("probabilities"),
+      dataTableOutput("recommendation")
     )
   ))
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  output$model_used <- renderText(paste("Model used:", input$model_choice))
+
   output$estimated_cases <- renderText({
     
     deaths = input$deaths
-    estimated_cases_that_caused_deaths <- deaths / fatality_rate
+    model_to_use = input$model_choice
     
-    number_of_times_cases_have_doubled <-
-      days_from_infection_to_death / doubling_time
+    cases_today = estimate_cases_by_deaths(deaths, fatality_rate, doubling_time, days_from_infection_to_death)
     
-    cases_today = estimated_cases_that_caused_deaths * (2 ** number_of_times_cases_have_doubled)
     
     result <-
       paste("The number of estimated cases today is",
@@ -88,11 +109,47 @@ server <- function(input, output) {
     population = input$population
     employees = input$employees
     
+    if (model_to_use == "#deaths"){
+      output_dataframe <- calculate_death_model(deaths, population, employees, fatality_rate = .0087,  doubling_time = 4, days_from_infection_to_death = 17.3)
+    }
     
-    output_dataframe <- calculate_death_model(deaths, population, employees, fatality_rate = .0087,  doubling_time = 4, days_from_infection_to_death = 17.3)
+    if (model_to_use == "#cases"){
+      output_dataframe <- calculate_cases_model(cases,
+                                                population,
+                                                employees,
+                                                community_external_estimate,
+                                                average_case_progression)    }
 
   return(output_dataframe)   
   }, digits = 4)
+
+
+  output$recommendation <- DT::renderDataTable({
+    
+    risk_you_want_to_take <- input$risk/100
+    model_to_use = input$model_choice
+    deaths = input$deaths
+    population = input$population
+    employees = input$employees
+    
+    if (model_to_use == "#deaths"){
+      output_dataframe <- calculate_death_model(deaths, population, employees, fatality_rate = .0087,  doubling_time = 4, days_from_infection_to_death = 17.3)
+    }
+    
+    if (model_to_use == "#cases"){
+      output_dataframe <- calculate_cases_model(cases,
+      population,
+      employees,
+      community_external_estimate,
+      average_case_progression)
+    }
+    datatable_to_return <- give_recommendation(model_table = output_dataframe, risk_you_want_to_take)
+    return(datatable_to_return)
+    
+  })
+    
+    
+    
 }
 
 # Run the application
