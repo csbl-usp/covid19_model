@@ -1,6 +1,6 @@
 library(shiny)
 
-#Defining UI ------
+#Defining UI -----
 ui <- fluidPage(titlePanel("Covid-19 Prediction Model"),
                 
                 sidebarLayout(                   #Total population
