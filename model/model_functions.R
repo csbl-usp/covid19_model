@@ -156,7 +156,7 @@ calculate_cases_model <-
       if (lang == "en"){
         output_dataframe$date <-
           factor(output_dataframe$date,
-                 levels = c("in a week", "tomorrow", "today"))
+                 levels = c("In a week", "Tomorrow", "Today"))
         p <-plot_estimated_cases_barplot(output_dataframe)       
         return(p)
       } else if (lang == "pt"){
@@ -230,7 +230,7 @@ give_recommendation <-  function(model_table, risk_you_want_to_take, lang) {
     
     output_dt = datatable(output_df, options = list(dom = 't'), escape = FALSE) %>% formatStyle(1,
                                                                                 color = color,
-                                                                                backgroundColor = backgroundcolor,
+                                                                                backgroundColor = backgroundcolor
                                                                                 )
     return(output_dt)
   }

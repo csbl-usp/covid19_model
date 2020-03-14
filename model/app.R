@@ -81,8 +81,6 @@ ui <- fluidPage(
                                       </div> ')))
   )),
   theme = shinythemes::shinytheme(ourtheme),
-  br(),
-  br(),
   # Sidebar with a slider input for number of bins #####
   sidebarLayout(
     sidebarPanel(
