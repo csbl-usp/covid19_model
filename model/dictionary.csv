@@ -1,21 +1,22 @@
-key,en,en
-title,Coronavirus: Why You Must Act Now,Coronavirus: Why You Must Act Now
-modelbutton,"Model to choose:""","Model to choose:"""
-#deaths,#deaths,#deaths
-@cases,#cases,#cases
-which_model,Do you want to use the modelling based on number of deaths or number of cases?,Do you want to use the modelling based on number of deaths or number of cases?
-number_of_employees, How many employees/students do you have?, How many employees/students do you have?
-risk_to_take,What risk are you willing to take (in percentage)?,What risk are you willing to take (in percentage)?
-risk_explained,"I am ok with this probability that one or more of my employees/students has the coronavirus.""","I am ok with this probability that one or more of my employees/students has the coronavirus."""
-#people,# people in your area,# people in your area
-model_deaths,Model #deaths,Model #deaths
-total_deaths,Total deaths as of today,Total deaths as of today
-model_cases,Model #cases,Model #cases
-total_cases,Total known cases in your area as of today,Total known cases in your area as of today
-param,"""Parameters used : ""","""Parameters used : """
-fatality,"""Fatality rate = 0.87% ""","""Fatality rate = 0.87% """
-days_from_infection,"""Days from infection to death = 17.3 ""","""Days from infection to death = 17.3 """
-doubiling,"""Doubling time = 4 ""","""Doubling time = 4 """
-progression,Model was based on average progression of case numbers in affected countries. ,Model was based on average progression of case numbers in affected countries. 
-adapted_from,"Adapted from medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca""","Adapted from medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca"""
-estimated_cases,"""The number of estimated true cases today is""","""The number of estimated true cases today is"""
+key,en,auto_pt,pt
+title,Coronavirus: Why You Must Act Now,Coronavirus: Por que você deve agir agora,Coronavirus: Por que você deve agir agora
+modelbutton,"Model to choose:""","Modelo a escolher:""","Modelo a escolher:"""
+#deaths,#deaths,#deaths,#mortes
+@cases,#cases,#cases,#casos
+which_model,Do you want to use the modelling based on number of deaths or number of cases?,Você quer usar a modelagem baseada no número de mortes ou número de casos?,Você quer usar o modelo baseada no número de mortes ou número de casos?
+number_of_employees, How many employees/students do you have?, Quantos funcionários / alunos que você tem?, Quantos funcionários / alunos que você tem?
+risk_to_take,What risk are you willing to take (in percentage)?,O risco que você está disposto a tomar (em percentagem)?,Qual o risco que você está disposto a aceitar (em percentagem)?
+risk_explained,"I am ok with this probability that one or more of my employees/students has the coronavirus.""","Estou ok com este probabilidade de que um ou mais dos meus funcionários / alunos tem o coronavírus.""","Estou ok com este probabilidade de que um ou mais dos meus funcionários / alunos tem o coronavírus."""
+#people,# people in your area,# pessoas em sua área,# pessoas em sua área
+model_deaths,Model #deaths,#deaths modelo,Modelo baseado em #mortes
+total_deaths,Total deaths as of today,Total de mortes a partir de hoje,Total de mortes até hoje
+model_cases,Model #cases,#cases modelo,Modelo baseado em #casos
+total_cases,Total known cases in your area as of today,Total de casos conhecidos em sua área a partir de hoje,Total de casos conhecidos em sua área até hoje
+param,"""Parameters used : ""","""Parâmetros utilizados:""","""Parâmetros utilizados:"""
+fatality,"""Fatality rate = 0.87% ""","""Taxa de fatalidade = 0,87%""","""Taxa de fatalidade = 0,87%"""
+days_from_infection,"""Days from infection to death = 17.3 ""","""Dias de infecção à morte = 17.3""","""Dias da infecção até a morte = 17.3"""
+doubiling,"""Doubling time = 4 ""","""Tempo de duplicação = 4""","""Tempo de duplicação = 4"""
+progression,Model was based on average progression of case numbers in affected countries. ,Modelo foi baseado em progressão média de número de casos em países afetados.,Modelo foi baseado em progressão média de número de casos em países afetados.
+adapted_from,"Adapted from medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca""","Adaptado de medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca""","Adaptado de medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca"""
+estimated_cases,"""The number of estimated true cases today is""","""O número de casos verdadeiros estimados hoje é""","""O número de casos verdadeiros estimados hoje é"""
+doubling_text,What is the expected doubling time of the infection? (Default = 4 days),Qual é o tempo de duplicação prevista da infecção? (Por defeito = 4 dias),Qual é a taxa de duplicação da Infecção? (Padrão = 4 dias)

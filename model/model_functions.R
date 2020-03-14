@@ -122,7 +122,7 @@ plot_estimated_cases_barplot <- function(output_dataframe){
   
   p <-
     ggplot(output_dataframe, aes(y = estimated_n_cases, x = date)) +
-    geom_bar(stat = 'identity') +
+    geom_bar(stat = 'identity', fill = "brown") +
     coord_flip() +
     theme_bw() +
     theme(axis.title = element_text(size = 19),
@@ -135,8 +135,7 @@ plot_estimated_cases_barplot <- function(output_dataframe){
 }
 
 #' @return datatable with recommendation
-give_recommendation <-
-  function(model_table, risk_you_want_to_take) {
+give_recommendation <-  function(model_table, risk_you_want_to_take) {
     prob_of_at_least_one_infected = 1 - model_table$likelyhood_no_infection
     
     recomendation = ""
@@ -378,4 +377,16 @@ get_proportion_of_foreign_cases <- function(cases) {
     return(0.01)
   }
   
+}
+
+
+
+
+# translationContent <- fread("model/dictionary.csv")
+# translation <- dlply(translationContent ,.(key), function(s) key = as.list(s))
+# save(translation, file = "model/translation.bin")
+load("translation.bin")
+
+tr <- function(input, text){ # translates text into current language
+  sapply(text,function(s) translation[[s]][[input$lang]], USE.NAMES=FALSE)
 }

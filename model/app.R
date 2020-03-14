@@ -2,16 +2,15 @@ library(shiny)
 library(shiny.i18n)
 
 library(data.table)
-# Parameters :
+##### Functions and parameters #####
 
 fatality_rate = .0087
 days_from_infection_to_death = 17.3
 doubling_time = 4
-
-# functions
-
 source("model_functions.R")
 require(readxl)
+
+
 
 average_case_progression = c(
   12,
@@ -48,6 +47,9 @@ average_case_progression = c(
   35399
 )
 
+ 
+##################################
+
 
 #We can choose from severak shiny themes in the link below
 #https://shiny.rstudio.com/gallery/shiny-theme-selector.html
@@ -63,6 +65,12 @@ ui <- fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
+      radioButtons(
+        "lang",
+        "Language",
+        choices = c("en", "pt"),
+        selected = "en"),
+  
       p(
         h4('Do you want to use the modelling based on number of deaths or number of cases?')
       ),
@@ -76,10 +84,7 @@ ui <- fluidPage(
         choiceNames = NULL,
         choiceValues = NULL
       ),
-      numericInput("employees",
-                   h4("How many employees/students do you have?"),
-                   250,
-                   min = 1),
+      uiOutput("employ"),
       numericInput(
         "risk",
         h4("What risk are you willing to take (in percentage)?"),
@@ -155,8 +160,25 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+#### Texts #####
   output$model_used <-
     renderText(paste("Model used:", input$model_choice))
+
+  
+#### UI #####
+  
+  output$employ <- renderUI({
+    numericInput("employees",
+                 tr(input, "number_of_employees"),
+                 250,
+                 min = 1)
+  })
+  
+  
+  
+
+#### Tables and plots #####
   
   output$estimated_cases <- renderText({
     deaths = input$deaths
