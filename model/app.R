@@ -47,7 +47,7 @@ average_case_progression = c(
   35399
 )
 
- 
+
 ##################################
 
 
@@ -55,94 +55,76 @@ average_case_progression = c(
 #https://shiny.rstudio.com/gallery/shiny-theme-selector.html
 ourtheme <- "cerulean"
 
+
+
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   # Application title
-  titlePanel(h1("Coronavirus: Why You Must Act Now")),
+  titlePanel(     fluidRow(
+    column(8, textOutput("title")),
+    column(3,       tags$div(HTML('<div id="lang" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline">
+  <label class="control-label" for="lang"></label>
+                                      <div class="shiny-options-group">
+
+                                      <label class="radio-inline">
+                                      <input type="radio" name="lang" value="pt" checked="checked"/>
+                                      <span><img src="brasil.png" style="width:28px;height:20px;"/></span>
+
+                                      </label>
+                                      <label class="radio-inline">
+                                      <input type="radio" name="lang" value="en" />
+                                      <span><img src="uk.png" style="width:28px;height:20px;"/></span>
+
+                                      </label>
+                                      </div>
+                                      </div> ')))
+  )),
   theme = shinythemes::shinytheme(ourtheme),
   br(),
   br(),
-  # Sidebar with a slider input for number of bins
+  # Sidebar with a slider input for number of bins #####
   sidebarLayout(
     sidebarPanel(
-      radioButtons(
-        "lang",
-        "Language",
-        choices = c("en", "pt"),
-        selected = "en"),
-  
-      p(
-        h4('Do you want to use the modelling based on number of deaths or number of cases?')
-      ),
-      radioButtons(
-        "model_choice",
-        "Model to choose:",
-        choices = c("#deaths", "#cases"),
-        selected = "#deaths",
-        inline = FALSE,
-        width = NULL,
-        choiceNames = NULL,
-        choiceValues = NULL
-      ),
+      textOutput("which_model"),
+      uiOutput("radio_model")
+      ,
       uiOutput("employ"),
-      numericInput(
-        "risk",
-        h4("What risk are you willing to take (in percentage)?"),
-        1,
-        min = 0,
-        max = 100
-      ),
-      p(
-        '"I am ok with this probability that one or more of my employees/students has the coronavirus."'
-      ),
+      uiOutput("risk_to_take"),
+      textOutput("risk_explained"),
       
-      numericInput("population",
-                   h4("How many people have in your area"),
-                   3096633),
+      uiOutput("people"),
       conditionalPanel(
         condition = "input.model_choice == '#deaths'",
         
-        h4("Model #deaths"),
+        textOutput("model_deaths"),
         
         numericInput(
           "deaths",
-          h4("Total deaths as of today"),
+          textOutput("total_deaths"),
           1,
           min = 0,
           max = 100
         )
       ),
-      conditionalPanel(
-        condition = "input.model_choice == '#cases'",
-        h4("Model #cases"),
-        numericInput("cases",
-                     h4("Total known cases in your area as of today"),
-                     30,
-                     min = 0)
-      )
+      conditionalPanel(condition = "input.model_choice == '#cases'",
+                       textOutput(h4("model_cases")),
+                       uiOutput("cases"))
       
     ),
     
-    # Show a plot of the generated distribution
+    # Main panel ##########
     mainPanel(
       #h3(textOutput("model_used")),
       conditionalPanel(
         condition = "input.model_choice == '#deaths'",
-        p("Parameters used : "),
-        p("Fatality rate = 0.87% "),
-        p("Days from infection to death = 17.3 "),
-        numericInput("doubling_time",
-                     p("What is the expected doubling time of the infection? (Default = 4 days)"),
-                     4,
-                     min = 0,
-                     max = 100)
+        textOutput("param"),
+        textOutput("fatality"),
+        textOutput("days_from_infection"),
+        uiOutput("doubling_time")
       ),
-      conditionalPanel(
-        condition = "input.model_choice == '#cases'",
-        p(
-          h4("Model was based on average progression of case numbers in affected countries. ")
-        )
-      ),
+      conditionalPanel(condition = "input.model_choice == '#cases'",
+                       textOutput(h4("progression"))),
       textOutput("estimated_cases"),
       br(),
       tableOutput("probabilities"),
@@ -150,23 +132,44 @@ ui <- fluidPage(
       dataTableOutput("recommendation", width = "60%"),
       br(),
       br(),
-      p(
-        "* Adapted from medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca"
-      
-        )
+      textOutput("adapted_from")
     )
   )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  
-#### Texts #####
+  #### Texts #####
+  output$title <- renderText(tr(input, "title"))
   output$model_used <-
     renderText(paste("Model used:", input$model_choice))
-
   
-#### UI #####
+  output$which_model <-
+    renderText(tr(input, "which_model"))
+  
+  output$risk_explained <-
+    renderText(tr(input, "risk_explained"))
+  
+  output$model_deaths <-
+    renderText(tr(input, "model_deaths"))
+  
+  output$estimated_cases <- renderText(tr(input, 'estimated_cases'))
+  output$fatality <- renderText(tr(input, 'fatality'))
+  output$model_cases <- renderText(tr(input, 'model_cases'))
+  output$model_deaths <- renderText(tr(input, 'model_deaths'))
+  output$modelbutton <- renderText(tr(input, 'modelbutton'))
+  output$number_of_employees <-
+    renderText(tr(input, 'number_of_employees'))
+  output$param <- renderText(tr(input, 'param'))
+  output$progression <- renderText(tr(input, 'progression'))
+  output$risk_explained <- renderText(tr(input, 'risk_explained'))
+  output$risk_to_take <- renderText(tr(input, 'risk_to_take'))
+  output$title <- renderText(tr(input, 'title'))
+  output$total_cases <- renderText(tr(input, 'total_cases'))
+  output$total_deaths <- renderText(tr(input, 'total_deaths'))
+  output$which_model <- renderText(tr(input, 'which_model'))
+  
+  #### UI #####
   
   output$employ <- renderUI({
     numericInput("employees",
@@ -175,10 +178,55 @@ server <- function(input, output) {
                  min = 1)
   })
   
+  output$radio_model <- renderUI({
+    deaths = tr(input, "#deaths")
+    cases = tr(input, "#cases")
+    choice_vector = c("#deaths", "#cases")
+    names(choice_vector) = c(deaths, cases)
+    
+    radioButtons(
+      "model_choice",
+      tr(input, "model_choice_header"),
+      choices = choice_vector,
+      selected = "#deaths",
+      inline = FALSE,
+      width = NULL,
+      choiceNames = NULL,
+      choiceValues = NULL
+    )
+    
+  })
   
+  output$risk_to_take <- renderUI({
+    numericInput("risk",
+                 h4(tr(input, "risk_to_take")),
+                 1,
+                 min = 0,
+                 max = 100)
+  })
   
-
-#### Tables and plots #####
+  output$people <- renderUI({
+    numericInput("population",
+                 h4(tr(input, "#people")),
+                 3096633)
+  })
+  
+  output$cases <- renderUI({
+    numericInput("cases",
+                 tr(input, "model_cases"),
+                 30,
+                 min = 0)
+  })
+  
+  output$doubling_time <- renderUI({
+    numericInput("doubling_time",
+                 tr(input, "doubling_text"),
+                 4,
+                 min = 0,
+                 max = 100)
+  })
+  
+  #### Tables and plots #####
   
   output$estimated_cases <- renderText({
     deaths = input$deaths
@@ -209,6 +257,7 @@ server <- function(input, output) {
   output$probabilities <- renderTable({
     model_to_use = input$model_choice
     doubling_time = input$doubling_time
+    lang = input$lang
     deaths = input$deaths
     cases = input$cases
     population = input$population
@@ -220,6 +269,7 @@ server <- function(input, output) {
           deaths,
           population,
           employees,
+          lang = lang,
           fatality_rate = .0087,
           doubling_time = doubling_time,
           days_from_infection_to_death = 17.3
@@ -230,6 +280,7 @@ server <- function(input, output) {
       output_dataframe <- calculate_cases_model(cases,
                                                 population,
                                                 employees,
+                                                lang = lang,
                                                 average_case_progression)
     }
     
@@ -240,6 +291,7 @@ server <- function(input, output) {
   output$recommendation <- DT::renderDataTable({
     risk_you_want_to_take <- input$risk / 100
     model_to_use = input$model_choice
+    lang = input$lang
     deaths = input$deaths
     population = input$population
     employees = input$employees
@@ -251,6 +303,7 @@ server <- function(input, output) {
           deaths,
           population,
           employees,
+          lang = "en",
           fatality_rate = .0087,
           doubling_time = 4,
           days_from_infection_to_death = 17.3
@@ -261,10 +314,11 @@ server <- function(input, output) {
       output_dataframe <- calculate_cases_model(cases,
                                                 population,
                                                 employees,
+                                                lang = "en",
                                                 average_case_progression)
     }
     datatable_to_return <-
-      give_recommendation(model_table = output_dataframe, risk_you_want_to_take)
+      give_recommendation(model_table = output_dataframe, risk_you_want_to_take, lang)
     return(datatable_to_return)
     
   })
@@ -275,6 +329,7 @@ server <- function(input, output) {
     risk_you_want_to_take <- input$risk / 100
     model_to_use = input$model_choice
     deaths = input$deaths
+    lang = input$lang
     doubling_time = input$doubling_time
     population = input$population
     employees = input$employees
@@ -286,6 +341,7 @@ server <- function(input, output) {
           deaths,
           population,
           employees,
+          lang = lang,
           fatality_rate = .0087,
           doubling_time = doubling_time,
           days_from_infection_to_death = 17.3,
@@ -295,10 +351,11 @@ server <- function(input, output) {
     
     if (model_to_use == "#cases") {
       output_plot <- calculate_cases_model(cases,
-                                                population,
-                                                employees,
-                                                average_case_progression,
-                                                output_format = "plot")
+                                           population,
+                                           employees,
+                                           lang = lang,
+                                           average_case_progression,
+                                           output_format = "plot")
     }
     
     return(output_plot)

@@ -4,6 +4,7 @@ library(ggplot2)
 #' @param number_of_deaths
 #' @param population
 #' @param employees
+#' @param lang The chosen language
 #' @param output_format Either "dataframe" or "plot". Defaults to "dataframe"
 #' @param fatality_rate Defaults to .0087
 #' @param doubling_time Defaults to 4
@@ -13,6 +14,7 @@ calculate_death_model <-
   function(deaths,
            population,
            employees,
+           lang,
            fatality_rate = .0087,
            doubling_time = 4,
            days_from_infection_to_death = 17.3,
@@ -34,25 +36,51 @@ calculate_death_model <-
     # Obs: number of cases output by the model can currently be bigger than population!
     likelihoods = (1 - infection_rates) ** employees
     
+    if (lang == "en"){
+      dates_vector =  c("Today", "Tomorrow", "In a week")
+    } else if (lang == "pt"){
+      dates_vector =  c("Hoje", "Amanhã", "Em uma semana")
+    }
+    
     output_dataframe = data.frame(
-      date = c("today", "tomorrow", "in a week"),
+      date = dates_vector,
       estimated_n_cases = estimated_cases ,
       likelyhood_no_infection = likelihoods
     )
     
     
+    
     if (output_format == "dataframe") {
-      return(output_dataframe)
+      
+      if (lang == "en"){
+        return(output_dataframe)
+      } else if (lang == "pt"){
+        colnames(output_dataframe) =  c("Data", "Casos estimados", "Chance de 0 infecções")
+        return(output_dataframe)
+      }
+      
     }
     
     if (output_format == "plot") {
-      output_dataframe$date <-
-        factor(output_dataframe$date,
-               levels = c("in a week", "tomorrow", "today"))
-      
-      p <-plot_estimated_cases_barplot(output_dataframe)
-      
-      
+      if (lang == "en"){
+        output_dataframe$date <-
+          factor(output_dataframe$date,
+                 levels = c("In a week", "Tomorrow", "Today"))
+        
+        p <-plot_estimated_cases_barplot(output_dataframe)
+        
+        return(p)
+        
+      } else if (lang == "pt"){
+        output_dataframe$date <-
+          factor(output_dataframe$date,
+                 levels = c("Em uma semana", "Amanhã", "Hoje"))
+        
+        p <-plot_estimated_cases_barplot(output_dataframe)
+        
+        return(p)
+        
+      }
       
       return(p)
     }
@@ -65,6 +93,7 @@ calculate_death_model <-
 #' @param cases
 #' @param population
 #' @param employees
+#' @param lang
 #' @param average_case_progression How cases develop through time (on average).
 #' @param output_format Either "dataframe" or "plot". Defaults to "dataframe"
 #' @return aata.frame with model results
@@ -72,6 +101,7 @@ calculate_cases_model <-
   function(cases,
            population,
            employees,
+           lang,
            average_case_progression,
            output_format = "dataframe") {
     share_of_foreign_spread <- get_proportion_of_foreign_cases(cases)
@@ -95,22 +125,48 @@ calculate_cases_model <-
     # Obs: number of cases output by the model can currently be bigger than population!
     likelihoods = (1 - infection_rates) ** employees
     
+    if (lang == "en"){
+      dates_vector =  c("Today", "Tomorrow", "In a week")
+    } else if (lang == "pt"){
+      dates_vector =  c("Hoje", "Amanhã", "Em uma semana")
+    }
+    
     output_dataframe = data.frame(
-      date = c("today", "tomorrow", "in a week"),
+      date = dates_vector,
       estimated_n_cases = estimated_cases ,
       likelyhood_no_infection = likelihoods
     )
     
+    
+    
     if (output_format == "dataframe") {
-      return(output_dataframe)
+      
+      if (lang == "en"){
+        return(output_dataframe)
+      } else if (lang == "pt"){
+        colnames(output_dataframe) =  c("Data", "Casos estimados", "Chance de 0 infecções")
+        return(output_dataframe)
+      }
+
     }
     
     if (output_format == "plot") {
-      output_dataframe$date <-
-        factor(output_dataframe$date,
-               levels = c("in a week", "tomorrow", "today"))
-      
-      p <-plot_estimated_cases_barplot(output_dataframe)
+
+            
+      if (lang == "en"){
+        output_dataframe$date <-
+          factor(output_dataframe$date,
+                 levels = c("in a week", "tomorrow", "today"))
+        p <-plot_estimated_cases_barplot(output_dataframe)       
+        return(p)
+      } else if (lang == "pt"){
+        output_dataframe$date <-
+          factor(output_dataframe$date,
+                 levels = c("Em uma semana","Amanhã", "Hoje"))
+        p <-plot_estimated_cases_barplot(output_dataframe)
+        colnames(output_dataframe) =  c("Data", "Casos estimados", "Chance de 0 infecções")
+        return(p)
+      }
       
       
       return(p)
@@ -135,34 +191,47 @@ plot_estimated_cases_barplot <- function(output_dataframe){
 }
 
 #' @return datatable with recommendation
-give_recommendation <-  function(model_table, risk_you_want_to_take) {
+give_recommendation <-  function(model_table, risk_you_want_to_take, lang) {
     prob_of_at_least_one_infected = 1 - model_table$likelyhood_no_infection
     
-    recomendation = ""
+    recomendation_level = 1
     backgroundcolor = ""
     color = "white"
     
     if (prob_of_at_least_one_infected[1] > risk_you_want_to_take) {
-      recomendation = "Close immediately!"
+      recomendation_level = 4
       backgroundcolor = "red"
     } else if (prob_of_at_least_one_infected[2] > risk_you_want_to_take) {
-      recomendation = "Close before tomorrow!"
+      recomendation_level = 3
       backgroundcolor = "orange"
     } else if (prob_of_at_least_one_infected[3] > risk_you_want_to_take) {
-      recomendation = "Close within a week!"
+      recomendation_level = 2
       backgroundcolor = "orange"
     } else {
-      recomendation = "No specific recommendation"
       backgroundcolor = ""
       color = "black"
     }
     
-    output_df = data.frame("Recommendation" = recomendation)
-    rownames(output_df) <- c("What to do:")
+    recommendations <- list()
+    recommendations[["en"]] <- c("No specific reccommendation","Close within a week!", "Close before tomorrow!", "Close immediately!")
+    recommendations[["pt"]] <- c("Nenhuma recomendação específica","Feche em até uma semana!", "Feche antes de amanhã!", "Feche imediatamente!")
+
+    rec_name <- list()
+    rec_name[["en"]] <- "Recommendation:"
+    rec_name[["pt"]] <- "Recomendação:"  
+    output_df = data.frame("Recommendation" = paste0("<b>",recommendations[[lang]][recomendation_level], "</b>"))
+    colnames(output_df) <- rec_name[[lang]]
     
-    output_dt = datatable(output_df, options = list(dom = 't')) %>% formatStyle(1,
+    todo <- list()
+    todo[["en"]] <- "What to do:"
+    todo[["pt"]] <- "O que fazer:"   
+    rownames(output_df) <- c(todo[[lang]])
+    
+    
+    output_dt = datatable(output_df, options = list(dom = 't'), escape = FALSE) %>% formatStyle(1,
                                                                                 color = color,
-                                                                                backgroundColor = backgroundcolor)
+                                                                                backgroundColor = backgroundcolor,
+                                                                                )
     return(output_dt)
   }
 
@@ -379,12 +448,6 @@ get_proportion_of_foreign_cases <- function(cases) {
   
 }
 
-
-
-
-# translationContent <- fread("model/dictionary.csv")
-# translation <- dlply(translationContent ,.(key), function(s) key = as.list(s))
-# save(translation, file = "model/translation.bin")
 load("translation.bin")
 
 tr <- function(input, text){ # translates text into current language
