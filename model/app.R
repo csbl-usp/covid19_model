@@ -126,7 +126,11 @@ ui <- fluidPage(
         p("Parameters used : "),
         p("Fatality rate = 0.87% "),
         p("Days from infection to death = 17.3 "),
-        p("Doubling time = 4 ")
+        numericInput("doubling_time",
+                     p("What is the expected doubling time of the infection? (Default = 4 days)"),
+                     4,
+                     min = 0,
+                     max = 100)
       ),
       conditionalPanel(
         condition = "input.model_choice == '#cases'",
@@ -182,6 +186,7 @@ server <- function(input, output) {
   
   output$probabilities <- renderTable({
     model_to_use = input$model_choice
+    doubling_time = input$doubling_time
     deaths = input$deaths
     cases = input$cases
     population = input$population
@@ -194,7 +199,7 @@ server <- function(input, output) {
           population,
           employees,
           fatality_rate = .0087,
-          doubling_time = 4,
+          doubling_time = doubling_time,
           days_from_infection_to_death = 17.3
         )
     }
@@ -248,6 +253,7 @@ server <- function(input, output) {
     risk_you_want_to_take <- input$risk / 100
     model_to_use = input$model_choice
     deaths = input$deaths
+    doubling_time = input$doubling_time
     population = input$population
     employees = input$employees
     cases = input$cases
@@ -259,7 +265,7 @@ server <- function(input, output) {
           population,
           employees,
           fatality_rate = .0087,
-          doubling_time = 4,
+          doubling_time = doubling_time,
           days_from_infection_to_death = 17.3,
           output_format = "plot"
         )

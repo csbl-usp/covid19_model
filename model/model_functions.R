@@ -9,7 +9,6 @@ library(ggplot2)
 #' @param doubling_time Defaults to 4
 #' @param days_from_infection_to_death Defaults to 17.3
 #' @return
-
 calculate_death_model <-
   function(deaths,
            population,
@@ -51,11 +50,8 @@ calculate_death_model <-
         factor(output_dataframe$date,
                levels = c("in a week", "tomorrow", "today"))
       
-      p <-
-        ggplot(output_dataframe, aes(y = estimated_n_cases, x = date)) +
-        geom_bar(stat = 'identity') +
-        coord_flip() +
-        theme_bw()
+      p <-plot_estimated_cases_barplot(output_dataframe)
+      
       
       
       return(p)
@@ -114,16 +110,29 @@ calculate_cases_model <-
         factor(output_dataframe$date,
                levels = c("in a week", "tomorrow", "today"))
       
-      p <-
-        ggplot(output_dataframe, aes(y = estimated_n_cases, x = date)) +
-        geom_bar(stat = 'identity') +
-        coord_flip() +
-        theme_bw()
+      p <-plot_estimated_cases_barplot(output_dataframe)
       
       
       return(p)
     }
   }
+
+
+plot_estimated_cases_barplot <- function(output_dataframe){
+  
+  p <-
+    ggplot(output_dataframe, aes(y = estimated_n_cases, x = date)) +
+    geom_bar(stat = 'identity') +
+    coord_flip() +
+    theme_bw() +
+    theme(axis.title = element_text(size = 19),
+          axis.text = element_text(size = 19)
+    ) +
+    ylab("Estimated number of cases") +
+    xlab("Date")
+  
+  return(p)
+}
 
 #' @return datatable with recommendation
 give_recommendation <-
