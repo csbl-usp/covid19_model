@@ -76,7 +76,9 @@ calculate_death_model <-
           factor(output_dataframe$date,
                  levels = c("Em uma semana", "Amanhã", "Hoje"))
         
-        p <-plot_estimated_cases_barplot(output_dataframe)
+        p <-plot_estimated_cases_barplot(output_dataframe) +
+          xlab("Data") +
+          ylab("Número de casos estimado")
         
         return(p)
         
@@ -163,8 +165,9 @@ calculate_cases_model <-
         output_dataframe$date <-
           factor(output_dataframe$date,
                  levels = c("Em uma semana","Amanhã", "Hoje"))
-        p <-plot_estimated_cases_barplot(output_dataframe)
-        colnames(output_dataframe) =  c("Data", "Casos estimados", "Chance de 0 infecções")
+        p <-plot_estimated_cases_barplot(output_dataframe)+
+          xlab("Data") +
+          ylab("Número de casos estimado")
         return(p)
       }
       

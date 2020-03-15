@@ -96,6 +96,7 @@ ui <- fluidPage(
         condition = "input.model_choice == '#deaths'",
         
         textOutput("model_deaths"),
+        textOutput("based_on_fatality"),
         
         numericInput(
           "deaths",
@@ -107,6 +108,7 @@ ui <- fluidPage(
       ),
       conditionalPanel(condition = "input.model_choice == '#cases'",
                        textOutput(h4("model_cases")),
+                       textOutput("reliability"),
                        uiOutput("cases"))
       
     ),
@@ -117,20 +119,25 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.model_choice == '#deaths'",
         textOutput("param"),
-        textOutput("fatality"),
-        textOutput("days_from_infection"),
-        uiOutput("doubling_time")
+        uiOutput("fatality"),
+        uiOutput("doubling_time"),
+        textOutput("days_from_infection")
+
       ),
       conditionalPanel(condition = "input.model_choice == '#cases'",
                        textOutput(h4("progression"))),
       textOutput("estimated_cases"),
       br(),
       tableOutput("probabilities"),
-      plotOutput("cases_barplot", width = "90%"),
+      plotOutput("cases_barplot"),
       dataTableOutput("recommendation", width = "60%"),
       br(),
       br(),
-      textOutput("adapted_from")
+      textOutput("adapted_from"),
+      uiOutput('medium'),
+      textOutput("adapted_by"),
+      uiOutput("csbl"),
+      textOutput("warning")
     )
   )
 )
@@ -166,6 +173,20 @@ server <- function(input, output) {
   output$total_cases <- renderText(tr(input, 'total_cases'))
   output$total_deaths <- renderText(tr(input, 'total_deaths'))
   output$which_model <- renderText(tr(input, 'which_model'))
+  output$adapted_from <- renderText(tr(input, 'adapted_from'))
+  output$warning <- renderText(tr(input,'warning'))
+  output$adapted_by <- renderText(tr(input,'adapted_by'))
+  
+  #### hyperlink ####
+  url <- a("Coronavirus: Why You Must Act Now (@Tomas Pueyo)", href="https://medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca")
+  output$medium <- renderUI({
+    tagList(url)
+  })
+  csbl_url <- a("CSBL - Universidade de São Paulo", href="https://csbiology.org")
+  output$csbl <- renderUI({
+    tagList(csbl_url)
+  })
+  
   
   #### UI #####
   
@@ -224,12 +245,23 @@ server <- function(input, output) {
                  max = 100)
   })
   
+  
+  output$fatality <- renderUI({
+    numericInput("fatality",
+                 tr(input, "fatality"),
+                 0.87,
+                 min = 0,
+                 max = 100)
+  })
+  
   #### Tables and plots #####
   
   output$estimated_cases <- renderText({
     deaths = input$deaths
     cases = input$cases
     model_to_use = input$model_choice
+    fatality_rate = input$fatality
+    doubling_time = input$doubling_time
     
     if (model_to_use == "#deaths") {
       cases_today = estimate_cases_by_deaths(deaths,
@@ -260,7 +292,7 @@ server <- function(input, output) {
     cases = input$cases
     population = input$population
     employees = input$employees
-    
+    fatality_rate = input$fatality/100
     if (model_to_use == "#deaths") {
       output_dataframe <-
         calculate_death_model(
@@ -268,7 +300,7 @@ server <- function(input, output) {
           population,
           employees,
           lang = lang,
-          fatality_rate = .0087,
+          fatality_rate = fatality_rate,
           doubling_time = doubling_time,
           days_from_infection_to_death = 17.3
         )
@@ -294,6 +326,8 @@ server <- function(input, output) {
     population = input$population
     employees = input$employees
     cases = input$cases
+    doubling_time = input$doubling_time
+    fatality_rate = input$fatality/100
     
     if (model_to_use == "#deaths") {
       output_dataframe <-
@@ -302,8 +336,8 @@ server <- function(input, output) {
           population,
           employees,
           lang = "en",
-          fatality_rate = .0087,
-          doubling_time = 4,
+          fatality_rate = fatality_rate,
+          doubling_time = doubling_time,
           days_from_infection_to_death = 17.3
         )
     }
@@ -332,6 +366,7 @@ server <- function(input, output) {
     population = input$population
     employees = input$employees
     cases = input$cases
+    fatality_rate = input$fatality/100
     
     if (model_to_use == "#deaths") {
       output_plot <-
@@ -340,7 +375,7 @@ server <- function(input, output) {
           population,
           employees,
           lang = lang,
-          fatality_rate = .0087,
+          fatality_rate = fatality_rate,
           doubling_time = doubling_time,
           days_from_infection_to_death = 17.3,
           output_format = "plot"
