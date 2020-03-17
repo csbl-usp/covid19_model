@@ -1,0 +1,65 @@
+#####covid19-prediction-model-test -----
+
+alfa1 <- -257.580667091408
+alfa2 <- 67698.802805002
+beta <- 0.4375 #beta = gama*R0
+gama <- 0.15625
+R0 <- 2.8 #beta/gama
+R0_min <- 1.02
+x0 <- 20
+dx <- 4
+
+#Informação usada para o plotagem do modelo#
+time_range <- seq(from = 0, to = 50, by = 0.01)
+time_range_test <- as.data.frame(time_range)
+time_range_test$infected_prediction <- 0
+time_range_test$pop_fraction <- 0
+
+total_pop <- 9000000
+infected <- 440
+recovered <- 0
+quarantine_gov <- 15
+time_start_quarantine_pop <- 10
+
+susceptible_calc <- total_pop - infected - recovered
+susceptible_rate <- (total_pop - infected - recovered) / total_pop
+infected_rate <- infected / total_pop
+recovered_rate <- 1 - infected_rate - susceptible_rate
+
+###################### infection
+######## for
+
+for (i in 1:5001(time_range_test)[1]) {
+  R0_effective <- #R0_effective
+    if (time_range_test[i, 1] > quarantine_gov) {
+      R0_min + R0 * exp(-time_range_test[i,1] / time_start_quarantine_pop)
+    } else {
+      R0
+    }
+{
+  susceptible_prediction <-
+    susceptible_rate - gama * R0_effective * susceptible_rate * infected_rate * (time_range_test[i, 1] - 0.01)
+  susceptible_prediction
+}
+
+#Informação usada para o plotagem do modelo#
+{
+  time_range_teste[i, 2] <- #put this information on the df time_range_test in infected_prediction column
+    infected_rate + (gama * R0_effective * susceptible_rate * infected_rate - gama * infected_rate) * (time_range_test[i, 1] - 0.01)
+  infected_prediction
+}
+
+{
+  hubei <-
+    (alfa1 - alfa2) / (1 + exp((time_range[i, 1] - x0) / dx)) + alfa2 #it's calculated a little bit different than the excel
+  hubei
+}
+}#final do for
+
+  recovered_prediction <-
+    1 - susceptible_prediction - infected_prediction
+  recovered_prediction
+
+#Informação usada para o plotagem do modelo#
+hubei_pop_fraction <- hubei[1] / total_pop
+hubei_pop_fraction
