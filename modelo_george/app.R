@@ -1,3 +1,4 @@
+########Basic shiny app to improve when the prediction_model.R is defined
 library(shiny)
 
 #Defining parameters
