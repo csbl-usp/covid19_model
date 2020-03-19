@@ -4,21 +4,6 @@ time_cumulativo <- read_excel("time_series_19-covid_March12_v2xls.xls",
                               sheet = "Confirmed_cases")
 
 
-
-
-
-parsItaly <- c(0.1001,1.0882,1.3197,2.0000,25.4713,50.0000)
-parsIran <- c(0.1001  ,  1.0841   , 1.3151  ,  2.0000 ,  25.4713  , 50.0000)
-parsHubei <- c(0.4135 ,   1.1003 ,   0.5005 ,   2.0000 ,  25.4655 ,  50.0000)
-parsKorea <- c(0.1000 ,   1.2552 ,   1.0990 ,   2.0000 ,  25.4710 ,  50.0000)
-
-locations <- c("pars1","pars2","pars3","pars4","pars5","pars6")
-locDF <- data.frame(parsItaly,parsHubei,parsKorea,parsIran)
-#locDF <- t(locDF)
-#colnames(locDF) <- locations
-rownames(locDF) <- locations
-write.csv(x=locDF,file = "model_parameters_by_region.tsv",sep = "\t")
-
 data <- time_cumulativo[102,5:54] #Italy
 country <- 'Italia5M'
 TotalPop <- 5*10^6
