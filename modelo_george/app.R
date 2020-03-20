@@ -1,6 +1,7 @@
 library(shiny.i18n)
+library(shiny)
+library(shinythemes)
 library(plotly)
-
 ##################################
 
 
@@ -57,7 +58,6 @@ rownames(locDF) <- locations
 x <- seq(from = 0.01, to = 120, by = 0.01)
 
 
-library(shiny)
 #Defining UI ------
 ui <- fluidPage(titlePanel("Covid-19 Prediction Model"),
                 theme = shinythemes::shinytheme(ourtheme),
@@ -99,11 +99,8 @@ ui <- fluidPage(titlePanel("Covid-19 Prediction Model"),
                       selected = 1
                     ),
 
-
-
-
                     hr(),
-                    actionButton("go", "Plot data"),
+                    actionButton("go", "Plot data")
                     #fluidRow(column(3, verbatimTextOutput("value")))
                   ),
 
@@ -113,8 +110,8 @@ ui <- fluidPage(titlePanel("Covid-19 Prediction Model"),
                     br(),
                     h3("Projeção para os próximos 60 dias"),
                     plotlyOutput("plot2"),
-                    br()         
-                            ),
+                    br()
+                            )
                   #plotOutput("plot"),
                 )
 )
@@ -216,10 +213,6 @@ server <- function(input, output, session) {
     #Get Variables
     #hist()
   })
-
-
-
-
 
 }
 
