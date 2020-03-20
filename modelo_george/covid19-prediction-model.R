@@ -41,15 +41,15 @@ locDF <- data.frame(parsItaly, parsHubei, parsKorea, parsIran)
 rownames(locDF) <- locations
 
 #x <- seq(from = 0.01, to = 50, by = 0.01)
-x <- seq(from = 0.01, to = 50, by = 0.01)
+x <- seq(from = 0.01, to = 120, by = 0.01)
 
-TotalPop <- as.numeric(5*10^7)
-InitCases <- as.numeric(1)
+TotalPop <- as.numeric(10^7)
+InitCases <- as.numeric(100)
 Si <- (TotalPop-InitCases)/TotalPop
 Ii <- InitCases/TotalPop
 pars <- locDF[, as.numeric(1)]
 
-SIR = FunLoopSIR3RoSIR(Si, Ii, pars[1], pars[2], pars[3], pars[4], pars[5], pars[6], x)
+SIR = FunLoopSIR3RoSIR(Si, Ii, pars[1], pars[2], pars[3], pars[3], pars[5], pars[6], x)
 
 library(plotly)
 SIR$time_range <- factor(SIR$time_range, levels = SIR[["time_range"]])
