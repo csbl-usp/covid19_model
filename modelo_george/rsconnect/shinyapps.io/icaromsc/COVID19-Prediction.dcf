@@ -1,0 +1,13 @@
+name: COVID19-Prediction
+title: COVID19-Prediction
+username:
+account: icaromsc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1969263
+bundleId: 2900546
+url: https://icaromsc.shinyapps.io/COVID19-Prediction/
+when: 1584673609.39528
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: covid19-prediction-model.R|model_parameters_by_region.csv|matlab_scripts/FitWuhan3Ro.m|matlab_scripts/FunLoopSIR3Ro.m|matlab_scripts/FunLoopSIR3RoSIR.m|matlab_scripts/MatlabToR.sh|modelo_matlab_george/dataframe_model_by_region.R|modelo_matlab_george/FitWuhan3Ro.R|modelo_matlab_george/FunLoopSIR3Ro.R|modelo_matlab_george/FunLoopSIR3RoSIR.R|modelo_matlab_george/matlab_function_test.R
