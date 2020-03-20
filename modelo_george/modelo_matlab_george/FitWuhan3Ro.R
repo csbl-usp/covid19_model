@@ -12,9 +12,11 @@ TotalPop <- 5*10^6
 InitCases <- 0.1
 Ro3 <- 2
 
+
+####### SCRIPT ANTIGO
 parsguess <- c(0.1, 1, 2, Ro3, 0, 50)
 lb <- c(0.1, 1, 0.5, Ro3, 1, 50)
-ub <- c(0.7, 5, 4, Ro3, 50, 50)
+ub <- c(0.7, 5, 4, Ro3, 50, 5Q0)
 
 N = length(data)
 
@@ -25,7 +27,7 @@ Rdata <- as.numeric((data[1, 1:50])) / TotalPop
 
 Si = (TotalPop-InitCases)/TotalPop
 Ii = InitCases/TotalPop
-x <- seq(from = 0.01, to = N, by = 0.01)
+x <- seq(from = 0.01, to = 120, by = 0.01)
 
 
 ########################################
@@ -60,18 +62,19 @@ FunLoopSIR3RoSIR <- function(Si, Ii, gamma,Ro1, Ro2,Ro3, iquarant,durationq, x){
   return(dataframe)
 }
 
-
-dataframe = FunLoopSIR3RoSIR(1, 100/10^7, parsguess[1], parsguess[2], parsguess[3], parsguess[3], parsguess[5], parsguess[6], x);
+parsguess <- c(0.1001, 1.0882, 1.3197, 2.0000, 25.4713, 50.0000)
+dataframe = FunLoopSIR3RoSIR(0.999, 440/10^7, parsguess[1], parsguess[2], parsguess[3], parsguess[3], parsguess[5], parsguess[6], x);
 
 
 ############# PLOT DATA #############################
+par(mfrow = c(1,1))
 
-plot(x, 100 * dataframe$R,'l', col="red",
+plot(x, 100 * dataframe$R,'l', col="blue",
      ylab ="Cumulativo dos casos (R) (% populacao)",
      xlab = "% Dias desde o inicio da contagem",
      main = 'Sao Paulo de acordo com Italia');
-
-plot( x,100 * dataframe$I,'l', col="blue",
+par(new=TRUE)
+plot(x, 100 * dataframe$I,'l', col="red",
       ylab = "% População Doente Simultaneamente",
       xlab = "% Dias desde o inicio da contagem",
       main = 'Sao Paulo de acordo com Italia'
