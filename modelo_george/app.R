@@ -59,7 +59,7 @@ x <- seq(from = 0.01, to = 120, by = 0.01)
 
 
 #Defining UI ------
-ui <- fluidPage(titlePanel("Covid-19 Prediction Model"),
+ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                 theme = shinythemes::shinytheme(ourtheme),
 
 
@@ -68,14 +68,14 @@ ui <- fluidPage(titlePanel("Covid-19 Prediction Model"),
                   sidebarPanel(
                     numericInput(
                       "total_pop",
-                      h5("Populacao da região conglomerada/conectada que você quer simular"),
+                      h5("Populacao da região conglomerada/conectada que você quer simular (>1000 habitantes):"),
                       value = 10^7,
                       min = 1
                     ),
                     numericInput(
                       #Infected number
                       "infected",
-                      h5("Número de infectados no primeiro dia"),
+                      h5("Número de casos confirmados no primeiro dia"),
                       value = 440,
                       min = 1
                     ),
@@ -100,12 +100,20 @@ ui <- fluidPage(titlePanel("Covid-19 Prediction Model"),
                     ),
 
                     hr(),
-                    actionButton("go", "Plot data")
+                    actionButton("go", "Plot data"),
                     #fluidRow(column(3, verbatimTextOutput("value")))
+                    br(),
+                    br(),
+                    br(),
+                    h6("Produzido por:"),
+                    uiOutput("csbl")
+
+
+
                   ),
 
                   mainPanel(
-                    h3("Dados experimentais vs Predição do modelo"),
+                    h3("Dados experimentais vs. Predição do modelo"),
                     plotlyOutput("plot1"),
                     br(),
                     h3("Projeção para os próximos 60 dias"),
@@ -214,6 +222,12 @@ server <- function(input, output, session) {
     #hist()
   })
 
+  #####hyperlink ######
+  csbl_url <- a("CSBL - Universidade de São Paulo", href="https://csbiology.org")
+  output$csbl <- renderUI({
+    tagList(csbl_url)
+  })
+  
 }
 
 #Run application -----
