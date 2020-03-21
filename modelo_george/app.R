@@ -59,7 +59,7 @@ x <- seq(from = 0.01, to = 120, by = 0.01)
 
 
 #Defining UI ------
-ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
+ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model"), windowTitle = "Covid-19 Prediction Model"),
                 theme = shinythemes::shinytheme(ourtheme),
 
                 sidebarLayout(
@@ -67,7 +67,7 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                   sidebarPanel(
                     numericInput(
                       "total_pop",
-                      h5("Populacao da região conglomerada/conectada que você quer simular", span("(>1000 habitantes):", style = "color:red")),
+                      h5("Populacao da região conglomerada/conectada que você quer simular", span("(>1000 habitantes)", style = "color:red"),":"),
                       value = 10^7,
                       min = 1000
                     ),
@@ -75,7 +75,7 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                     numericInput(
                       #Infected number
                       "infected",
-                      h5("Número de casos confirmados no primeiro dia"),
+                      h5("Número de casos confirmados no primeiro dia:"),
                       value = 440,
                       min = 1
                     ),
@@ -83,14 +83,14 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                     numericInput(
                       #Recovered
                       "recovered",
-                      h5("Número de recuperados"),
+                      h5("Número de recuperados:"),
                       value = 0,
                       min = 1
                     ),
 
                     selectInput(
                       "select",
-                      label = h5("Selecione a região que voce vai tomar como referência para o modelo"),
+                      label = h5("Selecione a região que voce vai tomar como referência para o modelo:"),
                       choices = list(
                         "Italy" = 1,
                         "Hubei" = 2,
@@ -163,10 +163,18 @@ server <- function(input, output, session) {
   ######## ADJUSTING PLOTLY AREA -------------------
 
     ###### 1st - Rplot_50 days -----
+    #arguments autosize, width and height = to adjust the size of the graphic
+    #argument legend to adjust the position of line legends
     figure1 <- plot_ly(SIR, x = ~x[1:5000], y = ~I[1:5000]*1000, name = 'Infected', mode = 'lines', type = 'scatter', line = list(color = 'rgb(77, 77, 255)', width = 4))
-    figure1 <- figure1 %>% layout(title = paste("Sua região de acordo com " , colnames(locDF)[as.numeric(input$select)]),
-                                xaxis = list(title = "Dias desde o início da contagem"),
-                                yaxis = list(side = 'left', title = 'Cumulativo dos casos (R% população)', showgrid = FALSE, zeroline = FALSE))
+    figure1 <- figure1 %>% layout(title = paste("Sua região de acordo com ", colnames(locDF)[as.numeric(input$select)]),
+                                  autosize = F, width = 800, height = 400,
+                                  xaxis = list(title = "Dias desde o início da contagem"),
+                                  yaxis = list(
+                                    side = 'left',
+                                    title = 'Cumulativo dos casos (R% população)',
+                                    showgrid = TRUE,
+                                    zeroline = FALSE
+                                  ))
     figure1
 
   })
@@ -185,16 +193,37 @@ server <- function(input, output, session) {
     adjustt()
 
     ###### 2nd - Rplot_120 days -----
-    figure2 <- plot_ly(SIR, x = ~x, y = ~I*1000 ,name = 'Infected',mode = 'lines', type = 'scatter', line = list(color = 'rgb(255, 77, 77)', width = 4))
+    #arguments autosize, width and height = to adjust the size of the graphic
+    #argument legend to adjust the position of line legends
+    figure2 <- plot_ly(SIR, x = ~x, y = ~I*1000 ,name = 'Infected', mode = 'lines', type = 'scatter', line = list(color = 'rgb(255, 77, 77)', width = 4))
     figure2 <- figure2 %>% add_trace(y = ~R*3.5, name = 'Recovered', line = list(color = 'rgb(77, 77, 255)', width = 4), yaxis = 'y2')
-    figure2 <- figure2 %>% layout(title = paste("Sua região de acordo com " , colnames(locDF)[as.numeric(input$select)]) ,
-                                xaxis = list(title = "% Dias desde o início da contagem"),
-                                yaxis = list(side = 'left',
-                                title = 'Cumulativo dos casos (R% população)',
-                                showgrid = FALSE, zeroline = FALSE),
-                                yaxis2 = list(side = 'right', overlaying = "y",
-                                 title = '%População Doente Simultaneamente',
-                                 showgrid = FALSE, zeroline = FALSE))
+    figure2 <- figure2 %>% layout(title = paste("Sua região de acordo com " , colnames(locDF)[as.numeric(input$select)]),
+                                  autosize = F, width = 800, height = 400,
+                                                                legend = list(
+                                                                  font = list(
+                                                                    family = "sans-serif",
+                                                                    size = 12,
+                                                                    color = "#000"),
+                                                                  bgcolor = "#f5f5ef",
+                                                                  bordercolor = "#f5f5ef",
+                                                                  borderwidth = 0,
+                                                                  x = 0.01, y = 0.99),
+                                  xaxis = list(title = "% Dias desde o início da contagem"),
+                                  yaxis = list(
+                                    side = 'left',
+                                    title = 'Cumulativo dos casos (R% população)',
+                                    showgrid = FALSE,
+                                    zeroline = FALSE
+                                  ),
+                                  yaxis2 = list(
+                                    side = 'right',
+                                    title = '%População Doente Simultaneamente',
+                                    overlaying = "y",
+                                    automargin = TRUE, #to axis label do not overlap the axis
+                                    showgrid = FALSE,
+                                    zeroline = FALSE
+                                  ))
+
     figure2
 
   })
