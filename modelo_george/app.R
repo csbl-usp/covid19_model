@@ -62,16 +62,16 @@ x <- seq(from = 0.01, to = 120, by = 0.01)
 ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                 theme = shinythemes::shinytheme(ourtheme),
 
-
                 sidebarLayout(
                   #Total population
                   sidebarPanel(
                     numericInput(
                       "total_pop",
-                      h5("Populacao da região conglomerada/conectada que você quer simular (>1000 habitantes):"),
+                      h5("Populacao da região conglomerada/conectada que você quer simular", span("(>1000 habitantes):", style = "color:red")),
                       value = 10^7,
-                      min = 1
+                      min = 1000
                     ),
+
                     numericInput(
                       #Infected number
                       "infected",
@@ -79,6 +79,7 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                       value = 440,
                       min = 1
                     ),
+
                     numericInput(
                       #Recovered
                       "recovered",
@@ -107,9 +108,6 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                     br(),
                     h6("Produzido por:"),
                     uiOutput("csbl")
-
-
-
                   ),
 
                   mainPanel(
@@ -119,16 +117,23 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model")),
                     h3("Projeção para os próximos 60 dias"),
                     plotlyOutput("plot2"),
                     br()
-                            )
-                  #plotOutput("plot"),
-                )
+                          )
+                        )
 )
 
 #Defining server logic -----
 server <- function(input, output, session) {
 
 
-  ##### PARADA REATIVA
+  ######## SHOW INTRO TEXT OF THE APP ---------------
+  observeEvent("", {
+    showModal(modalDialog(
+      includeHTML("intro_text.html"),
+      easyClose = TRUE
+    ))
+  })
+
+  ######## REACTIVE BUTTONS TO PLOT -----------------
   adjustt <- eventReactive(input$go, {
     print("react just!")
     runif(100)
@@ -141,7 +146,7 @@ server <- function(input, output, session) {
   })
 
 
-  ### O PLOT VAI AQUI
+  ######## DIFFERENTIAL EQUATION -------------------
   output$plot1 <- renderPlotly({
     TotalPop <- as.numeric(input$total_pop)
     InitCases <- as.numeric(input$infected)
@@ -155,28 +160,15 @@ server <- function(input, output, session) {
     #print(mydf[1])
     adjustt()
 
-    ################Plots Area!
+  ######## ADJUSTING PLOTLY AREA -------------------
 
-    ######Rplot_50dias
+    ###### 1st - Rplot_50 days -----
     figure1 <- plot_ly(SIR, x = ~x[1:5000], y = ~I[1:5000]*1000, name = 'Infected', mode = 'lines', type = 'scatter', line = list(color = 'rgb(77, 77, 255)', width = 4))
     figure1 <- figure1 %>% layout(title = paste("Sua região de acordo com " , colnames(locDF)[as.numeric(input$select)]),
                                 xaxis = list(title = "Dias desde o início da contagem"),
                                 yaxis = list(side = 'left', title = 'Cumulativo dos casos (R% população)', showgrid = FALSE, zeroline = FALSE))
     figure1
 
-    # par(mfrow = c(1,2))
-    # plot(x, 100 * dataframe$R,'l', col="blue",
-    #      ylab ="Cumulativo dos casos (R) (% populacao)",
-    #      xlab = "% Dias desde o inicio da contagem",
-    #      main = 'Sao Paulo de acordo com Italia');
-    # #par(new=TRUE)
-    # plot(x, 100 * dataframe$I,'l', col="red",
-    #      ylab = "% População Doente Simultaneamente",
-    #      xlab = "% Dias desde o inicio da contagem",
-    #      main = 'Sao Paulo de acordo com Italia'
-    # )
-    #Get Variables
-    #hist()
   })
 
   output$plot2 <- renderPlotly({
@@ -192,9 +184,7 @@ server <- function(input, output, session) {
     #print(mydf[1])
     adjustt()
 
-    ################Plots Area!
-
-    ######Rplot_120dias
+    ###### 2nd - Rplot_120 days -----
     figure2 <- plot_ly(SIR, x = ~x, y = ~I*1000 ,name = 'Infected',mode = 'lines', type = 'scatter', line = list(color = 'rgb(255, 77, 77)', width = 4))
     figure2 <- figure2 %>% add_trace(y = ~R*3.5, name = 'Recovered', line = list(color = 'rgb(77, 77, 255)', width = 4), yaxis = 'y2')
     figure2 <- figure2 %>% layout(title = paste("Sua região de acordo com " , colnames(locDF)[as.numeric(input$select)]) ,
@@ -207,27 +197,16 @@ server <- function(input, output, session) {
                                  showgrid = FALSE, zeroline = FALSE))
     figure2
 
-    # par(mfrow = c(1,2))
-    # plot(x, 100 * dataframe$R,'l', col="blue",
-    #      ylab ="Cumulativo dos casos (R) (% populacao)",
-    #      xlab = "% Dias desde o inicio da contagem",
-    #      main = 'Sao Paulo de acordo com Italia');
-    # #par(new=TRUE)
-    # plot(x, 100 * dataframe$I,'l', col="red",
-    #      ylab = "% População Doente Simultaneamente",
-    #      xlab = "% Dias desde o inicio da contagem",
-    #      main = 'Sao Paulo de acordo com Italia'
-    # )
-    #Get Variables
-    #hist()
   })
 
-  #####hyperlink ######
+
+  ######## SETTING HYPERLINKS  -------------------_
+
   csbl_url <- a("CSBL - Universidade de São Paulo", href="https://csbiology.org")
   output$csbl <- renderUI({
     tagList(csbl_url)
   })
-  
+
 }
 
 #Run application -----
