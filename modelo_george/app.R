@@ -7,9 +7,9 @@ library(plotly)
 
 #We can choose from severak shiny themes in the link below
 #https://shiny.rstudio.com/gallery/shiny-theme-selector.html
-#ourtheme <- "cerulean"
+ourtheme <- "cerulean"
 #ourtheme <- "superhero"
-ourtheme <- "yeti"
+#ourtheme <- "yeti"
 
 
 
@@ -56,7 +56,7 @@ rownames(locDF) <- locations
 
 #x <- seq(from = 0.01, to = 50, by = 0.01)
 x <- seq(from = 0.01, to = 120, by = 0.01)
-
+SIR <- NULL 
 
 #Defining UI ------
 ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model"), windowTitle = "Covid-19 Prediction Model"),
@@ -136,31 +136,33 @@ server <- function(input, output, session) {
   ######## REACTIVE BUTTONS TO PLOT -----------------
   adjustt <- eventReactive(input$go, {
     print("react just!")
-    runif(100)
-  })
-
-
-  observeEvent(input$go, {
-    print("go data!")
-
-  })
-
-
-  ######## DIFFERENTIAL EQUATION -------------------
-  output$plot1 <- renderPlotly({
+    ######## DIFFERENTIAL EQUATION -------------------
+    
     TotalPop <- as.numeric(input$total_pop)
     InitCases <- as.numeric(input$infected)
     Si <- (TotalPop - InitCases) / TotalPop
     Ii <- InitCases / TotalPop
     pars <- locDF[, as.numeric(input$select)]
-
+    
     #Get S I R values
-    SIR <- FunLoopSIR3RoSIR(Si, Ii, pars[1], pars[2], pars[3], pars[3], pars[5], pars[6], x)
+    SIR <<- FunLoopSIR3RoSIR(Si, Ii, pars[1], pars[2], pars[3], pars[3], pars[5], pars[6], x)
     print("mydf generated")
-    #print(mydf[1])
-    adjustt()
+    
+    SIR <- as.data.frame(SIR)
+    runif(SIR)
+  })
 
-  ######## ADJUSTING PLOTLY AREA -------------------
+
+  observeEvent(input$go, {
+    print("go data!")
+    
+  })
+
+
+  output$plot1 <- renderPlotly({
+    
+    adjustt()
+    ######## ADJUSTING PLOTLY AREA -------------------
 
     ###### 1st - Rplot_50 days -----
     #arguments autosize, width and height = to adjust the size of the graphic
@@ -180,18 +182,8 @@ server <- function(input, output, session) {
   })
 
   output$plot2 <- renderPlotly({
-    TotalPop <- as.numeric(input$total_pop)
-    InitCases <- as.numeric(input$infected)
-    Si <- (TotalPop - InitCases) / TotalPop
-    Ii <- InitCases / TotalPop
-    pars <- locDF[, as.numeric(input$select)]
-
-    #Get S I R values
-    SIR <- FunLoopSIR3RoSIR(Si, Ii, pars[1], pars[2], pars[3], pars[3], pars[5], pars[6], x)
-    print("mydf generated")
-    #print(mydf[1])
     adjustt()
-
+  
     ###### 2nd - Rplot_120 days -----
     #arguments autosize, width and height = to adjust the size of the graphic
     #argument legend to adjust the position of line legends
@@ -231,7 +223,7 @@ server <- function(input, output, session) {
 
   ######## SETTING HYPERLINKS  -------------------_
 
-  csbl_url <- a("CSBL - Universidade de São Paulo", href="https://csbiology.org")
+  csbl_url <- a("CSBL - Universidade de São Paulo", href="https://csbiology.com")
   output$csbl <- renderUI({
     tagList(csbl_url)
   })
