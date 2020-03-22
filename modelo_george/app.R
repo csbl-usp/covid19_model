@@ -63,8 +63,9 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model"), windowTitle = "C
                 theme = shinythemes::shinytheme(ourtheme),
 
                 sidebarLayout(
-                  #Total population
+                  
                   sidebarPanel(
+                    #Total population
                     numericInput(
                       "total_pop",
                       h5("Populacao da região conglomerada/conectada que você quer simular", span("(>1000 habitantes)", style = "color:red"),":"),
@@ -111,11 +112,14 @@ ui <- fluidPage(titlePanel(strong("Covid-19 Prediction Model"), windowTitle = "C
                   ),
 
                   mainPanel(
-                    h3("Dados experimentais vs. Predição do modelo"),
-                    plotlyOutput("plot1"),
+                    h4(strong("Dados experimentais vs. Predição do modelo"), align = "center"),
                     br(),
-                    h3("Projeção para os próximos 60 dias"),
-                    plotlyOutput("plot2"),
+                    div(plotlyOutput("plot1"), align = "center"),
+                    br(),
+                    br(),
+                    h4(strong("Projeção para os próximos 60 dias"), align = "center"),
+                    br(),
+                    div(plotlyOutput("plot2"), align = "center"),
                     br()
                           )
                         )
@@ -167,9 +171,10 @@ server <- function(input, output, session) {
     ###### 1st - Rplot_50 days -----
     #arguments autosize, width and height = to adjust the size of the graphic
     #argument legend to adjust the position of line legends
-    figure1 <- plot_ly(SIR, x = ~x[1:5000], y = ~I[1:5000]*1000, name = 'Infected', mode = 'lines', type = 'scatter', line = list(color = 'rgb(77, 77, 255)', width = 4))
+    figure1 <- plot_ly(SIR, x = ~x[1:5000], y = ~I[1:5000]*1000, name = 'Casos confirmados', mode = 'lines', type = 'scatter', line = list(color = 'rgb(255, 77, 77)', width = 4))
     figure1 <- figure1 %>% layout(title = paste("Sua região de acordo com ", colnames(locDF)[as.numeric(input$select)]),
                                   autosize = F, width = 800, height = 400,
+                                  # range = c(-0.5, 25),
                                   xaxis = list(title = "Dias desde o início da contagem"),
                                   yaxis = list(
                                     side = 'left',
@@ -187,8 +192,8 @@ server <- function(input, output, session) {
     ###### 2nd - Rplot_120 days -----
     #arguments autosize, width and height = to adjust the size of the graphic
     #argument legend to adjust the position of line legends
-    figure2 <- plot_ly(SIR, x = ~x, y = ~I*1000 ,name = 'Infected', mode = 'lines', type = 'scatter', line = list(color = 'rgb(255, 77, 77)', width = 4))
-    figure2 <- figure2 %>% add_trace(y = ~R*3.5, name = 'Recovered', line = list(color = 'rgb(77, 77, 255)', width = 4), yaxis = 'y2')
+    figure2 <- plot_ly(SIR, x = ~x, y = ~I*1000 ,name = 'Casos confirmados', mode = 'lines', type = 'scatter', line = list(color = 'rgb(255, 77, 77)', width = 4))
+    figure2 <- figure2 %>% add_trace(y = ~R*3.5, name = 'Casos recuperados', line = list(color = 'rgb(77, 77, 255)', width = 4), yaxis = 'y2')
     figure2 <- figure2 %>% layout(title = paste("Sua região de acordo com " , colnames(locDF)[as.numeric(input$select)]),
                                   autosize = F, width = 800, height = 400,
                                                                 legend = list(
@@ -199,7 +204,7 @@ server <- function(input, output, session) {
                                                                   bgcolor = "#f5f5ef",
                                                                   bordercolor = "#f5f5ef",
                                                                   borderwidth = 0,
-                                                                  x = 0.01, y = 0.99),
+                                                                  x = -0.01, y = -0.25),
                                   xaxis = list(title = "% Dias desde o início da contagem"),
                                   yaxis = list(
                                     side = 'left',
@@ -209,7 +214,7 @@ server <- function(input, output, session) {
                                   ),
                                   yaxis2 = list(
                                     side = 'right',
-                                    title = '%População Doente Simultaneamente',
+                                    title = '% Doentes simultaneamente',
                                     overlaying = "y",
                                     automargin = TRUE, #to axis label do not overlap the axis
                                     showgrid = FALSE,
